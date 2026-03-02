@@ -1,0 +1,14 @@
+<%- include('partials/head', {title: page.title}) %>
+<body>
+<%- include('partials/header') %>
+<main class="page-wrap">
+  <div class="text-page">
+    <h1><%= page.title %></h1>
+    <div class="text-page-body"><%= page.content %></div>
+  </div>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/player') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

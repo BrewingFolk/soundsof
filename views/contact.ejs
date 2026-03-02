@@ -1,0 +1,22 @@
+<%- include('partials/head', {title: page.title}) %>
+<body>
+<%- include('partials/header') %>
+<main class="page-wrap">
+  <div class="text-page">
+    <h1><%= page.title %></h1>
+    <div class="text-page-body"><%= page.content %></div>
+    <div class="contact-details">
+      <% if (page.email) { %>
+        <span class="contact-detail">Email: <a href="mailto:<%= page.email %>"><%= page.email %></a></span>
+      <% } %>
+      <% if (page.address) { %>
+        <span class="contact-detail"><%= page.address %></span>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/player') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<%- include('partials/head', {title: '404'}) %>
+<body>
+<%- include('partials/header') %>
+<main class="page-wrap">
+  <div class="text-page">
+    <h1>404</h1>
+    <div class="text-page-body"><%= message || 'Page not found.' %></div>
+    <a href="/" class="btn btn-primary" style="margin-top:16px;display:inline-flex;">Back to home</a>
+  </div>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/player') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

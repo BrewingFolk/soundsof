@@ -1,0 +1,73 @@
+<%- include('partials/head', {title: contributor.name}) %>
+<body>
+<%- include('partials/header') %>
+<main class="page-wrap">
+  <div class="contributor-hero">
+    <div>
+      <% if (contributor.image) { %>
+        <img src="<%= contributor.image %>" alt="<%= contributor.name %>" class="contributor-portrait">
+      <% } else { %>
+        <div class="contributor-portrait-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+      <% } %>
+    </div>
+    <div>
+      <h1 class="contributor-hero-name"><%= contributor.name %></h1>
+      <% if (contributor.bio) { %>
+        <p class="contributor-bio"><%= contributor.bio %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-bottom:0;">
+    <h2>Shows by <%= contributor.name %></h2>
+    <span style="font-size:0.75rem;color:#999;"><%= posts.length %> show<%= posts.length!==1?'s':'' %></span>
+  </div>
+
+  <div class="post-list">
+    <% if (posts.length === 0) { %>
+      <p style="padding:32px 0;color:#999;font-size:0.9rem;">No shows yet.</p>
+    <% } else { %>
+      <% posts.forEach(function(post, i) { %>
+      <div class="post-list-item">
+        <% if (post.audioUrl) { %>
+        <button class="play-row-btn"
+          data-play="<%= post.audioUrl %>"
+          data-title="<%= post.title %>"
+          data-contributor="<%= contributor.name %>"
+          data-thumb="<%= post.image || '' %>"
+          aria-label="Play">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <% } else { %>
+        <div class="play-row-placeholder"></div>
+        <% } %>
+        <span class="post-list-num"><%= String(i+1).padStart(2,'0') %></span>
+        <div class="post-list-info">
+          <a href="/post/<%= post.slug %>" class="post-list-title" style="text-decoration:none;color:inherit;display:block;"><%= post.title %></a>
+          <div class="post-list-sub">
+            <a href="/category/<%= slugify(post.category || '') %>" class="category-link"><%= post.category %></a>
+            <% if (post.tags && post.tags.length) { %>
+              <div class="post-list-tags">
+                <% post.tags.slice(0,3).forEach(function(tag) { %>
+                  <a href="/tag/<%= slugify(tag) %>" class="tag" style="background:<%= tagColor(tag) %>;"><%= tag %></a>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="post-list-right">
+          <span class="post-list-date"><%= new Date(post.publishedDate).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) %></span>
+          <% if (post.showLength) { %><span class="post-list-length"><%= post.showLength %></span><% } %>
+        </div>
+      </div>
+      <% }); %>
+    <% } %>
+  </div>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/player') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

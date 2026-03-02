@@ -1,0 +1,26 @@
+<% posts.forEach((post, i) => { %>
+  <% const contrib = contributors ? contributors.find(c => c.id === post.contributorId) : null; %>
+  <a href="/post/<%= post.slug %>" class="post-list-item" style="display:grid;text-decoration:none;color:inherit;">
+    <span class="post-list-num" style="grid-column:1;font-size:0.75rem;color:#999;font-weight:500;align-self:center;"><%= String(i+1).padStart(2,'0') %></span>
+    <div class="post-list-info" style="grid-column:2;">
+      <span class="post-list-title"><%= post.title %></span>
+      <div class="post-list-sub">
+        <% if (contrib) { %>
+          <span style="font-weight:600;"><%= contrib.name %></span>
+        <% } %>
+        <a href="/category/<%= slugify(post.category || '') %>" class="category-link" onclick="event.stopPropagation()"><%= post.category %></a>
+        <% if (post.tags && post.tags.length) { %>
+          <div class="post-list-tags">
+            <% post.tags.slice(0,3).forEach(tag => { %>
+              <a href="/tag/<%= slugify(tag) %>" class="tag" style="background:<%= tagColor(tag) %>;" onclick="event.stopPropagation()"><%= tag %></a>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="post-list-right">
+      <span class="post-list-date"><%= new Date(post.publishedDate).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) %></span>
+      <% if (post.showLength) { %><span class="post-list-length"><%= post.showLength %></span><% } %>
+    </div>
+  </a>
+<% }) %>

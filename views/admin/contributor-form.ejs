@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= contributor ? 'Edit Contributor' : 'New Contributor' %> — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+  <div class="admin-logo">Sounds Of<span>.</span> Admin</div>
+  <nav class="admin-nav">
+    <a href="/admin">Shows</a>
+    <a href="/admin/pages">Pages</a>
+    <a href="/admin/settings">Settings</a>
+    <a href="/" target="_blank">View Site &nearr;</a>
+  </nav>
+</header>
+<div class="admin-main" style="padding-top:40px;max-width:560px;">
+  <a href="/admin" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to dashboard
+  </a>
+  <h1 class="admin-section-title"><%= contributor ? 'Edit Contributor' : 'New Contributor' %></h1>
+  <form method="POST" action="<%= contributor ? '/admin/contributors/'+contributor.id+'/edit' : '/admin/contributors/new' %>" enctype="multipart/form-data" class="admin-form">
+
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input type="text" id="name" name="name" value="<%= contributor ? contributor.name : '' %>" required placeholder="Full name">
+    </div>
+
+    <div class="form-group">
+      <label>Photo</label>
+      <% if (contributor && contributor.image) { %>
+        <div style="margin-bottom:10px;"><img src="<%= contributor.image %>" id="img-preview" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:1px solid #e8e8e8;"></div>
+      <% } else { %>
+        <div style="margin-bottom:10px;"><img id="img-preview" style="display:none;width:100px;height:100px;border-radius:50%;object-fit:cover;border:1px solid #e8e8e8;"></div>
+      <% } %>
+      <input type="file" name="image" accept="image/*" onchange="previewImage(this,'img-preview')">
+      <p class="form-hint" style="margin-top:6px;">Or paste a Cloudflare image URL:</p>
+      <input type="url" name="imageUrl" value="<%= contributor ? contributor.image || '' : '' %>" placeholder="https://imagedelivery.net/...">
+    </div>
+
+    <div class="form-group">
+      <label for="bio">Short Bio</label>
+      <textarea id="bio" name="bio" rows="5" placeholder="A short description about this contributor, their style, where they come from..."><%= contributor ? contributor.bio || '' : '' %></textarea>
+    </div>
+
+    <div style="display:flex;gap:12px;">
+      <button type="submit" class="btn btn-primary"><%= contributor ? 'Save Changes' : 'Add Contributor' %></button>
+      <a href="/admin" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

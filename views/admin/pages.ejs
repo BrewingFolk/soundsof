@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Edit Pages — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+  <div class="admin-logo">Sounds Of<span>.</span> Admin</div>
+  <nav class="admin-nav">
+    <a href="/admin">Shows</a>
+    <a href="/admin/pages" class="active">Pages</a>
+    <a href="/admin/settings">Settings</a>
+    <a href="/" target="_blank">View Site &nearr;</a>
+  </nav>
+</header>
+<div class="admin-main" style="padding-top:40px;">
+  <h1 class="admin-section-title">Edit Pages</h1>
+
+  <div class="admin-grid">
+    <!-- ABOUT -->
+    <div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #0a0a0a;">About Page</h2>
+      <form method="POST" action="/admin/pages/about" class="admin-form">
+        <div class="form-group">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= pages.about.title %>" required>
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea name="content" rows="12"><%= pages.about.content %></textarea>
+          <p class="form-hint">Use blank lines to create paragraphs.</p>
+        </div>
+        <button type="submit" class="btn btn-primary">Save About Page</button>
+      </form>
+    </div>
+
+    <!-- CONTACT -->
+    <div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #0a0a0a;">Contact Page</h2>
+      <form method="POST" action="/admin/pages/contact" class="admin-form">
+        <div class="form-group">
+          <label>Page Title</label>
+          <input type="text" name="title" value="<%= pages.contact.title %>" required>
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea name="content" rows="6"><%= pages.contact.content %></textarea>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" value="<%= pages.contact.email || '' %>" placeholder="hello@soundsof.co.uk">
+        </div>
+        <div class="form-group">
+          <label>Address / Location</label>
+          <input type="text" name="address" value="<%= pages.contact.address || '' %>" placeholder="Brewing Folk, Falmouth, Cornwall">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Contact Page</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

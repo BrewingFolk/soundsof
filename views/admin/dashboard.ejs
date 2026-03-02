@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — <%= settings.siteName %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+  <div class="admin-logo"><%= settings.logoText || 'Sounds Of' %><span>.</span> Admin</div>
+  <nav class="admin-nav">
+    <a href="/admin" class="active">Shows</a>
+    <a href="/admin/contributors/new">+ Contributor</a>
+    <a href="/admin/pages">Pages</a>
+    <a href="/admin/settings">Settings</a>
+    <a href="/" target="_blank">View Site &nearr;</a>
+  </nav>
+</header>
+<div class="admin-main" style="padding-top:40px;">
+
+  <div class="admin-grid">
+    <!-- POSTS -->
+    <div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;">
+        <h1 class="admin-section-title" style="margin-bottom:0;">Shows</h1>
+        <a href="/admin/posts/new" class="btn btn-primary">+ New Show</a>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (posts.length === 0) { %>
+            <tr><td colspan="4" style="color:#999;padding:24px 16px;">No shows yet.</td></tr>
+          <% } else { %>
+            <% posts.forEach(post => { %>
+            <tr>
+              <td style="font-weight:600;"><a href="/post/<%= post.slug %>" target="_blank" style="font-weight:700;"><%= post.title %></a></td>
+              <td style="color:#c45c1a;font-size:0.8rem;font-weight:600;"><%= post.category %></td>
+              <td style="color:#999;"><%= post.publishedDate %></td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/posts/<%= post.id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                  <form method="POST" action="/admin/posts/<%= post.id %>/delete" onsubmit="return confirm('Delete this show?')">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CONTRIBUTORS -->
+    <div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;">
+        <h2 class="admin-section-title" style="margin-bottom:0;">Contributors</h2>
+        <a href="/admin/contributors/new" class="btn btn-primary">+ New</a>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr><th>Name</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% if (contributors.length === 0) { %>
+            <tr><td colspan="2" style="color:#999;padding:24px 16px;">No contributors yet.</td></tr>
+          <% } else { %>
+            <% contributors.forEach(c => { %>
+            <tr>
+              <td style="font-weight:600;"><a href="/contributor/<%= c.slug %>" target="_blank"><%= c.name %></a></td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/contributors/<%= c.id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                  <form method="POST" action="/admin/contributors/<%= c.id %>/delete" onsubmit="return confirm('Delete?')">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

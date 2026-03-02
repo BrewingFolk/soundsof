@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= post ? 'Edit Show' : 'New Show' %> — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+<header class="admin-header">
+  <div class="admin-logo">Sounds Of<span>.</span> Admin</div>
+  <nav class="admin-nav">
+    <a href="/admin">Shows</a>
+    <a href="/admin/pages">Pages</a>
+    <a href="/admin/settings">Settings</a>
+    <a href="/" target="_blank">View Site &nearr;</a>
+  </nav>
+</header>
+<div class="admin-main" style="padding-top:40px;">
+  <a href="/admin" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to dashboard
+  </a>
+
+  <h1 class="admin-section-title"><%= post ? 'Edit Show' : 'New Show' %></h1>
+
+  <form class="admin-form" method="POST" action="<%= post ? '/admin/posts/'+post.id+'/edit' : '/admin/posts/new' %>" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label for="title">Show Title *</label>
+      <input type="text" id="title" name="title" value="<%= post ? post.title : '' %>" required placeholder="e.g. Late Night Soul Vol. 3">
+    </div>
+
+    <div class="form-group">
+      <label for="contributorId">Contributor</label>
+      <select id="contributorId" name="contributorId">
+        <option value="">— Select contributor —</option>
+        <% contributors.forEach(c => { %>
+          <option value="<%= c.id %>" <%= (post && post.contributorId === c.id) ? 'selected' : '' %>><%= c.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" name="category" required>
+        <option value="">— Select category —</option>
+        <% ['Radio','Podcast','Project','Mix'].forEach(cat => { %>
+          <option value="<%= cat %>" <%= (post && post.category === cat) ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Tags</label>
+      <div class="tag-checkboxes" id="tag-checkboxes">
+        <% allTags.forEach(tag => { %>
+          <% const checked = post && post.tags && post.tags.includes(tag); %>
+          <label class="tag-checkbox-label <%= checked ? 'checked' : '' %>">
+            <input type="checkbox" name="tags" value="<%= tag %>" <%= checked ? 'checked' : '' %>>
+            <%= tag %>
+          </label>
+        <% }) %>
+      </div>
+      <div class="new-tag-row">
+        <input type="text" id="new-tag-input" placeholder="Add a new tag..." style="flex:1;">
+        <button type="button" class="btn btn-secondary" id="add-tag-btn">+ Add Tag</button>
+      </div>
+      <p class="form-hint">Check existing tags or add new ones. New tags are saved automatically.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="showLength">Show Length</label>
+      <input type="text" id="showLength" name="showLength" value="<%= post ? post.showLength || '' : '' %>" placeholder="e.g. 1hr 22min">
+    </div>
+
+    <div class="form-group">
+      <label for="publishedDate">Published Date</label>
+      <input type="date" id="publishedDate" name="publishedDate" value="<%= post ? post.publishedDate || '' : new Date().toISOString().split('T')[0] %>">
+    </div>
+
+    <div class="form-group">
+      <label for="audioUrl">Audio URL (Cloudflare / SoundCloud / etc.)</label>
+      <input type="url" id="audioUrl" name="audioUrl" value="<%= post ? post.audioUrl || '' : '' %>" placeholder="https://...">
+      <p class="form-hint">Paste the direct URL to the audio file hosted on Cloudflare or any public URL.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Show Image</label>
+      <% if (post && post.image) { %>
+        <div class="image-preview" style="margin-bottom:10px;">
+          <img src="<%= post.image %>" id="img-preview" style="max-width:200px;max-height:140px;object-fit:cover;border:1px solid #e8e8e8;">
+        </div>
+      <% } else { %>
+        <div class="image-preview" style="margin-bottom:10px;"><img id="img-preview" style="display:none;max-width:200px;max-height:140px;object-fit:cover;border:1px solid #e8e8e8;"></div>
+      <% } %>
+      <input type="file" name="image" accept="image/*" onchange="previewImage(this,'img-preview')">
+      <p class="form-hint" style="margin-top:6px;">Or paste a Cloudflare image URL:</p>
+      <input type="url" name="imageUrl" value="<%= post ? post.image || '' : '' %>" placeholder="https://imagedelivery.net/...">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Show Description</label>
+      <textarea id="description" name="description" rows="6" placeholder="Tell people what this show is about..."><%= post ? post.description || '' : '' %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="playlist">Playlist</label>
+      <textarea id="playlist" name="playlist" rows="10" placeholder="One track per line, e.g.&#10;Marvin Gaye — Inner City Blues&#10;Curtis Mayfield — Move On Up&#10;Al Green — Take Me to the River"><%= post ? post.playlist || '' : '' %></textarea>
+      <p class="form-hint">One track per line. E.g. Artist — Track Name</p>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <button type="submit" class="btn btn-primary"><%= post ? 'Save Changes' : 'Publish Show' %></button>
+      <a href="/admin" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>
