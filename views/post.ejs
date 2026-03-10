@@ -13,7 +13,7 @@
   }
 %>
 
-<main>
+<main<% if (contributor) { %> data-post-contributor="<%= contributor.name %>"<% } %>>
 
   <!-- POST HEADER ROW: title left, category/duration right -->
   <div class="post-page-header">
