@@ -90,7 +90,10 @@ img { display: block; max-width: 100%; }
   height: 1px;
   background: var(--black);
   display: block;
-  min-width: 40px;
+  margin-top: 12px;
+  width: 0px;
+  max-width:80px;
+  
 }
 
 .hamburger {
