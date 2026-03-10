@@ -3,107 +3,92 @@
 <%- include('partials/header') %>
 
 <main>
-  <!-- CAROUSEL -->
-  <% if (featured.length > 0) { %>
-  <section class="carousel-section">
-    <div class="carousel-wrap">
-      <div class="carousel-track">
-        <% featured.forEach((post, i) => { %>
-        <div class="carousel-slide" data-url="/post/<%= post.slug %>">
-          <% if (post.image) { %>
-            <img src="<%= post.image %>" alt="<%= post.title %>" class="carousel-img">
-          <% } else { %>
-            <div class="carousel-placeholder">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            </div>
-          <% } %>
-          <div class="carousel-caption">
-            <% if (post.category) { %>
-              <span class="carousel-category"><%= post.category %></span>
-            <% } %>
-            <h2><%= post.title %></h2>
-            <div class="carousel-meta">
-              <% 
-                const contrib = post.contributorId ? null : null;
-              %>
-              <span><%= new Date(post.publishedDate).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) %></span>
-              <% if (post.showLength) { %><span><%= post.showLength %></span><% } %>
-            </div>
-          </div>
-        </div>
-        <% }) %>
+
+  <%
+    // Format date as MM/DD/YYYY (US style like reference)
+    function fmtDate(d) {
+      const dt = new Date(d);
+      if (isNaN(dt)) return '';
+      const m = String(dt.getMonth()+1).padStart(2,'0');
+      const day = String(dt.getDate()).padStart(2,'0');
+      const y = dt.getFullYear();
+      return m+'/'+day+'/'+y;
+    }
+  %>
+
+  <!-- HERO — featured (latest) post -->
+  <% if (featured && featured.length > 0) { %>
+  <%   const hero = featured[0]; %>
+  <%   const heroContrib = contributors.find(c => c.id === hero.contributorId); %>
+  <a href="/post/<%= hero.slug %>" class="hero" aria-label="<%= hero.title %>">
+    <% if (hero.image) { %>
+      <img src="<%= hero.image %>" alt="<%= hero.title %>" class="hero-img">
+    <% } else { %>
+      <div class="hero-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
       </div>
+    <% } %>
+    <% if (hero.description || heroContrib) { %>
+    <div class="hero-assoc">
+      <% if (heroContrib) { %><span><%= heroContrib.name %></span><% } %>
     </div>
-    <div class="carousel-controls page-wrap">
-      <div class="carousel-dots">
-        <% featured.forEach((_, i) => { %>
-          <div class="carousel-dot<%= i===0?' active':'' %>" data-index="<%= i %>"></div>
-        <% }) %>
-      </div>
-      <div class="carousel-arrows">
-        <button class="carousel-btn" id="prev-btn" aria-label="Previous">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <button class="carousel-btn" id="next-btn" aria-label="Next">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-  <% } else { %>
-  <section class="page-wrap" style="padding-top:60px;padding-bottom:20px;">
-    <p style="color:#999;font-size:0.9rem;">No shows yet. <a href="/admin/posts/new">Add your first show &rarr;</a></p>
-  </section>
+    <% } %>
+    <span class="hero-title"><%= hero.title %></span>
+  </a>
   <% } %>
 
-  <!-- ALL POSTS -->
-  <section class="page-wrap" style="padding-top:48px;padding-bottom:80px;">
-    <div class="section-header" style="margin-bottom:0;">
-      <h2>All Shows</h2>
-    </div>
-    <div class="post-list">
-      <% if (listed.length === 0) { %>
-        <p style="padding:32px 0;color:#999;font-size:0.9rem;">No shows published yet.</p>
-      <% } else { %>
-        <% listed.forEach((post, i) => { %>
-        <% const contrib = contributors.find(c => c.id === post.contributorId); %>
-        <div class="post-list-item">
-          <% if (post.audioUrl) { %>
-          <button class="play-row-btn"
-            data-play="<%= post.audioUrl %>"
-            data-title="<%= post.title %>"
-            data-contributor="<%= contrib ? contrib.name : '' %>"
-            data-thumb="<%= post.image || '' %>"
-            aria-label="Play">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-          </button>
-          <% } else { %>
-          <div class="play-row-placeholder"></div>
-          <% } %>
-          <span class="post-list-num"><%= String(i+1).padStart(2,'0') %></span>
-          <div class="post-list-info">
-            <a href="/post/<%= post.slug %>" class="post-list-title" style="text-decoration:none;color:inherit;display:block;"><%= post.title %></a>
-            <div class="post-list-sub">
-              <% if (contrib) { %><a href="/contributor/<%= contrib.slug %>" style="font-weight:600;color:inherit;text-decoration:none;"><%= contrib.name %></a><% } %>
-              <a href="/category/<%= slugify(post.category || '') %>" class="category-link"><%= post.category %></a>
-              <% if (post.tags && post.tags.length) { %>
-                <div class="post-list-tags">
-                  <% post.tags.slice(0,3).forEach(tag => { %>
-                    <a href="/tag/<%= slugify(tag) %>" class="tag" style="background:<%= tagColor(tag) %>;"><%= tag %></a>
-                  <% }) %>
-                </div>
-              <% } %>
-            </div>
-          </div>
-          <div class="post-list-right">
-            <span class="post-list-date"><%= new Date(post.publishedDate).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) %></span>
-            <% if (post.showLength) { %><span class="post-list-length"><%= post.showLength %></span><% } %>
+  <!-- SITE DESCRIPTION -->
+  <% if (settings.siteDescription) { %>
+  <div class="site-description">
+    <p>Sounds of... <%= settings.siteDescription %></p>
+  </div>
+  <% } %>
+
+  <!-- POST LIST -->
+  <div class="post-list">
+    <% if (listed.length === 0) { %>
+      <p style="padding:32px 0;color:#999;font-size:0.9rem;">No shows published yet. <a href="/admin/posts/new">Add your first show →</a></p>
+    <% } else { %>
+      <% listed.forEach(function(post) { %>
+      <% const contrib = contributors.find(c => c.id === post.contributorId); %>
+      <div class="post-list-item" onclick="location.href='/post/<%= post.slug %>'">
+
+        <div class="post-list-left">
+          <a href="/post/<%= post.slug %>" class="post-list-title"><%= post.title %></a>
+          <div class="post-list-contributor">
+            Sounds of
+            <% if (contrib) { %>
+              <a href="/contributor/<%= contrib.slug %>"><%= contrib.name %></a>
+            <% } else { %>
+              Brewing Folk
+            <% } %>
           </div>
         </div>
-        <% }) %>
-      <% } %>
-    </div>
-  </section>
+
+        <div class="post-list-right">
+          <span class="post-list-date"><%= fmtDate(post.publishedDate) %></span>
+          <div class="post-list-cats">
+            <% if (post.category) { %>
+              <a href="/category/<%= slugify(post.category) %>" onclick="event.stopPropagation()"><%= post.category %></a>
+            <% } %>
+            <% if (post.showLength) { %>
+              <% if (post.category) { %>&nbsp;/&nbsp;<% } %>
+              <%= post.showLength %>
+            <% } %>
+          </div>
+        </div>
+
+      </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination">
+    <% if (hasOlder) { %><a href="/?page=<%= page + 1 %>">&larr; older</a><% } %>
+    <% if (hasNewer) { %><a href="/?page=<%= page - 1 %>">newer &rarr;</a><% } %>
+  </div>
+
 </main>
 
 <%- include('partials/footer') %>

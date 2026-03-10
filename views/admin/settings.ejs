@@ -15,6 +15,7 @@
     <a href="/admin/pages">Pages</a>
     <a href="/admin/settings" class="active">Settings</a>
     <a href="/" target="_blank">View Site &nearr;</a>
+    <form method="POST" action="/admin/logout" style="display:inline;"><button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.775rem;font-weight:500;color:rgba(255,255,255,0.55);font-family:inherit;padding:0;">Sign out</button></form>
   </nav>
 </header>
 <div class="admin-main" style="padding-top:40px;max-width:560px;">
@@ -36,6 +37,11 @@
       <label>Max Shows on Homepage</label>
       <input type="number" name="maxPostsOnHome" value="<%= settings.maxPostsOnHome || 20 %>" min="1" max="100">
       <p class="form-hint">How many shows to list on the homepage (after the carousel). Default: 20.</p>
+    </div>
+    <div class="form-group">
+      <label for="adminPassword">Change Admin Password</label>
+      <input type="password" id="adminPassword" name="adminPassword" placeholder="Leave blank to keep current password" autocomplete="new-password">
+      <p class="form-hint">Only fill this in if you want to change the password.</p>
     </div>
     <button type="submit" class="btn btn-primary">Save Settings</button>
   </form>

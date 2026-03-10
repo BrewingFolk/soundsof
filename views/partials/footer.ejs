@@ -1,7 +1,12 @@
 <footer class="site-footer">
-  <div class="footer-inner">
-    <a href="https://verdantbrewing.co/blogs/brewing-folk"><img src="https://player.brewingfolk.co/assets/vrdntBF.png" alt="<%= settings.siteName %> &mdash; <%= settings.siteTagline %>" /></a>
-    <span><%= settings.siteName %> &mdash; <%= settings.siteTagline %></span>
-    <span>&copy; <%= new Date().getFullYear() %> Brewing Folk</span>
+  <div class="footer-nav">
+    <a href="/about">Join us</a>
+    <a href="/about">About</a>
+    <a href="/contributors">Contributors</a>
   </div>
+  <hr class="footer-rule">
+  <div class="footer-brand">
+    <span class="footer-brand-name"><%= settings.brandLine || 'Verdant Brewing Co. / Brewing Folk' %></span>
+  </div>
+  <p class="footer-tagline">Sounds of... <%= settings.siteDescription || settings.siteTagline %></p>
 </footer>
