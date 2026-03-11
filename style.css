@@ -251,7 +251,7 @@ nav#main-nav a:hover { text-decoration: underline; }
 .post-list-left {}
 
 .post-list-title {
-  font-size: clamp(1.9rem, 1.8vw, 1.7rem);
+  font-size: clamp(1.2rem, 1.1rem, 1rem);
   font-weight: 700;
   line-height: 1.2;
   color: var(--black);
