@@ -251,7 +251,7 @@ nav#main-nav a:hover { text-decoration: underline; }
 .post-list-left {}
 
 .post-list-title {
-  font-size: clamp(2.2rem, 2.2vw, 2rem);
+  font-size: clamp(1.2rem, 1.1rem, 1rem);
   font-weight: 700;
   line-height: 1.2;
   color: var(--black);
@@ -262,13 +262,13 @@ nav#main-nav a:hover { text-decoration: underline; }
 .post-list-title:hover { text-decoration: underline; }
 
 .post-list-contributor {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   color: var(--grey-600);
   font-weight: 400;
 }
 
 .post-list-contributor a {
-  color: inherit;
+  color: var(--category-color);
   font-weight: 500;
 }
 
@@ -889,7 +889,7 @@ nav#main-nav a:hover { text-decoration: underline; }
   bottom: 0;
   left: 0;
   padding: 8px 12px;
-  font-size: 0.7rem;
+  font-size: 1.7rem;
   font-weight: 500;
   color: rgba(255,255,255,0.85);
   background: rgba(10,10,10,0.45);
