@@ -243,6 +243,55 @@ app.post('/admin/settings', requireAdmin, (req,res)=>{
   res.redirect('/admin/settings');
 });
 
+
+app.get('/feed.xml', (req, res) => {
+  const settings = readJSON('settings.json');
+  const posts = readJSON('posts.json').sort((a,b) => new Date(b.publishedDate) - new Date(a.publishedDate)).slice(0, 50);
+  const contributors = readJSON('contributors.json');
+
+  const siteUrl = process.env.SITE_URL || `http://localhost:${PORT}`;
+  const siteTitle = settings.siteName || 'Sounds Of';
+  const siteDesc = settings.siteDescription || settings.siteTagline || '';
+
+  const escape = str => (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  const items = posts.map(post => {
+    const contrib = contributors.find(c => c.id === post.contributorId);
+    const pubDate = new Date(post.publishedDate).toUTCString();
+    const link = `${siteUrl}/post/${post.slug}`;
+    const description = [
+      post.description,
+      post.playlist ? '\nTracklist:\n' + post.playlist : ''
+    ].filter(Boolean).join('\n').trim();
+
+    return `    <item>
+      <title>${escape(post.title)}</title>
+      <link>${escape(link)}</link>
+      <guid isPermaLink="true">${escape(link)}</guid>
+      <pubDate>${pubDate}</pubDate>
+      ${contrib ? `<author>${escape(contrib.name)}</author>` : ''}
+      ${post.category ? `<category>${escape(post.category)}</category>` : ''}
+      ${description ? `<description>${escape(description)}</description>` : ''}
+      ${post.audioUrl ? `<enclosure url="${escape(post.audioUrl)}" type="audio/mpeg" length="0"/>` : ''}
+    </item>`;
+  }).join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>${escape(siteTitle)}</title>
+    <link>${escape(siteUrl)}</link>
+    <description>${escape(siteDesc)}</description>
+    <language>en-gb</language>
+    <atom:link href="${escape(siteUrl)}/feed.xml" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>`;
+
+  res.set('Content-Type', 'application/rss+xml; charset=utf-8');
+  res.send(xml);
+});
+
 app.use((req,res)=>res.status(404).render('404',{message:'Page not found'}));
 
 app.listen(PORT,()=>{
